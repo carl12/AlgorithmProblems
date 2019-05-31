@@ -1,16 +1,13 @@
-function countCompares(len, ordered = true){
+function countCompares(len, ordered = true, obj = false, batch = true){
   let a = [];
-  if (ordered) {
-    for (var i = 0; i < len; i++) {
-      a.push(i);
-    }
-  } else {
-    for (var i = 0; i < len; i++) {
-      a.push(Math.random());
-    }
+  let dataMaker = ordered ? (i) => i : () => Math.random();
+  let entryMaker = obj ? (i) => ({key: dataMaker(i)}) : (i) => dataMaker(i);
+  let get = obj ? (a) => a.key : (a) => a;  
+  for (var i = 0; i < len; i++) {
+    a.push(entryMaker(i));
   }
   count  = 0;
-  a.sort((a,b) => {count++; return a - b});
+  a.sort((a,b) => {count++; !batch && console.log(get(a), get(a)); return get(a) - get(b)});
   console.log(len, count, ordered);
   console.log(count/len);
   console.log('-----');
@@ -19,13 +16,15 @@ function countCompares(len, ordered = true){
 }
 
 function countSequence() {
-  let a = [10,11,20,40,60,80,100,1000,10000,100000,1000000];
+  let a = [11];
   console.time();
   for (var num of a) {
-    countCompares(num, false);
-    countCompares(num, true);
+    // countCompares(num, false, true, false);
+    countCompares(num, true, true, false);
   }
   console.timeEnd();
 }
 
 countSequence();
+
+
