@@ -1,0 +1,22 @@
+{
+  "name": "UncrossedLines",
+  "version": "1.0.0",
+  "description": "",
+  "main": "UncrossedLines.js",
+  "scripts": {
+    "build": "babel src -d lib",
+    "ts": "babel ./src --presets @babel/preset-typescript --out-dir build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build2": "babel src --out-dir lib --extensions \".ts\" --source-maps inline",
+    "startBabel": "babel . --out-dir compiled --ignore=node_modules,compiled --source-maps inline -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-typescript": "^7.3.3"
+  }
+}
