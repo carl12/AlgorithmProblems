@@ -26,5 +26,3 @@ function countSequence() {
 }
 
 countSequence();
-
-
