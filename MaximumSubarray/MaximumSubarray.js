@@ -19,3 +19,15 @@ var maxSubArray = function(nums) {
   }
   return bestSum;
 };
+
+var maxSubArray = function(nums) {
+  if (!nums || !nums.length) {
+      return null;
+  }
+  let currSum = nums[0];
+  return nums.reduce((bestSum, val) => {
+    currSum = Math.max(0, currSum);
+    currSum += val;
+    return Math.max(currSum, bestSum);
+  });
+};
