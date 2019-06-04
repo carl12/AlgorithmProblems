@@ -24,6 +24,7 @@ class Stopwatch {
   constructor() {
     this.totalTime = 0;
     this.currStart = null;
+    this.lastLap = null;
   }
 
   start() {
@@ -41,6 +42,17 @@ class Stopwatch {
 
   getTotal() {
     return this.totalTime;
+  }
+
+  lap() {
+    if (this.lap) {
+      let oldLap = this.lap;
+      this.lap = Date.now();
+      return this.lap - oldLap;
+    } else {
+      this.lap = Date.now();
+      return 0;
+    }
   }
 }
 
