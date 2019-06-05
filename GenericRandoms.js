@@ -22,8 +22,22 @@ const descendingArr = (len = 10, end = 0) => {
   return arr;
 }
 
+const randomChoiceArr = (options, len = 10) => {
+  const arr = [];
+  for (let i = 0; i < len; i++) {
+    arr.push(randomChoice(options));
+  }
+  return arr;
+}
+
+const randomRange = (low, hi) => {
+  return Math.floor(Math.random() * (hi - low) + low);
+}
+const randomChoice = (options) => {
+  return options[randomRange(0, options.length)];
+}
 
 
 const wrapper = (a) => (...b) => [a(...b)];
 
-module.exports = { randomFloatArr, ascendingArr, descendingArr, wrapper }
+module.exports = { randomFloatArr, ascendingArr, descendingArr, randomChoiceArr, wrapper }
