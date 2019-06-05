@@ -1,0 +1,15 @@
+
+{
+  "compilerOptions": {
+      "target": "es6",
+      "downlevelIteration": true,
+      "module": "commonjs",
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true
+  },
+  "files": [
+      "WordFrequency.ts",
+
+  ]
+}
