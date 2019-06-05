@@ -6,7 +6,7 @@
       "module": "commonjs",
       "removeComments": true,
       "preserveConstEnums": true,
-      "sourceMap": true
+      //"sourceMap": true
   },
   "files": [
       "WordFrequency.ts",

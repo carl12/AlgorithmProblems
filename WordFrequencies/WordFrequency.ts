@@ -2,9 +2,17 @@
 Design a method to find the frequency of occurrences of any given word 
 in a book. What if we were running this algorithm multiple times?
 
-Key Takeaway: don't implement a whole datastructure to cut down on a 
-pass from splitting
+Key Takeaway: don't get fixated on a data structure. Prefix 
+trees are often unnessessary if you want to look at an entire
+word. Just use a hash map for lookup (assuming not many words).
+
+On another note, try to find a solution that doesn't require
+you to implement a datastructure. 
+
 */
+
+
+
 function WordFrequencies(words: string[], text: string): Number[] {
   const count = {};
   const myTrie = new Trie(words);
@@ -89,7 +97,6 @@ function WordFrequencies2(words: string[], text: string): Number[] {
   console.log(count)
   return res;
 }
-// let a = new Trie(['asdf']);
 // console.log(a.root.children.a.children.s.children.d.children.f);
 
 WordFrequencies2(['asdf', 'a', 'b', 'sdf'], 'asdf a b asdf asd sdf c d e asdf asdf a');

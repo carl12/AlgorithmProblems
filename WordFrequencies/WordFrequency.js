@@ -67,4 +67,3 @@ function WordFrequencies2(words, text) {
     return res;
 }
 WordFrequencies2(['asdf', 'a', 'b', 'sdf'], 'asdf a b asdf asd sdf c d e asdf asdf a');
-//# sourceMappingURL=WordFrequency.js.map
