@@ -15,10 +15,23 @@ function factorialZeros(n) {
     return numFiveFactors;
 }
 
-function printZero(n) {
-    console.log(factorialZeros(n), n);
+function factorialZeros2(n) {
+    count = 0;
+    for (factor = 5; n / factor >= 1; factor *= 5) {
+        count += Math.floor(n / factor);
+    }
+    return count;
 }
 
-for (var i = 1; i <= 125; i++) {
-    printZero(i);
+
+console.time()
+for (var i = 1; i < 10000000; i++) {
+    factorialZeros(i);
 }
+console.timeEnd();
+
+console.time();
+for (var i = 1; i < 10000000; i++) {
+    factorialZeros2(i);
+}
+console.timeEnd();
