@@ -91,52 +91,33 @@ function threeDigitNumberToEnglish(num) {
     }
 
     const twoDigit = num % 100;
-    if (twoDigit !== 0) {
-        if (twoDigit >= 20) {
-            let tens = Math.floor(twoDigit / 10);
-            let onesPlace = twoDigit % 10;
-            if (onesPlace === 0) {
-                output.push(`${tenTiers[tens]}`)
-            } else {
-                output.push(`${tenTiers[tens]}-${nums[onesPlace]}`)
-            }
-        } else if (twoDigit !== 0) {
-            output.push(`${nums[twoDigit]}`)
-        } 
-    }
+
+    if (twoDigit >= 20) {
+        let tens = Math.floor(twoDigit / 10);
+        let onesPlace = twoDigit % 10;
+        if (onesPlace === 0) {
+            output.push(`${tenTiers[tens]}`)
+        } else {
+            output.push(`${tenTiers[tens]}-${nums[onesPlace]}`)
+        }
+    } else if (twoDigit !== 0) {
+        output.push(`${nums[twoDigit]}`)
+    } 
     return output.join(' ');
 }
 
-// threeDigitNumberToEnglish(0, true);
-// threeDigitNumberToEnglish(0, false);
-// threeDigitNumberToEnglish(4, false);
-// threeDigitNumberToEnglish(8, false);
-// threeDigitNumberToEnglish(10, false);
-// threeDigitNumberToEnglish(11, false);
-// threeDigitNumberToEnglish(13, false);
-// threeDigitNumberToEnglish(17, false);
-// threeDigitNumberToEnglish(20, false);
-// threeDigitNumberToEnglish(21, false);
-// threeDigitNumberToEnglish(33, false);
-// threeDigitNumberToEnglish(55, false);
-// threeDigitNumberToEnglish(81, false);
-// threeDigitNumberToEnglish(90, false);
-// threeDigitNumberToEnglish(70, false);
-
-// threeDigitNumberToEnglish(100, false);
-// threeDigitNumberToEnglish(200, false);
-// threeDigitNumberToEnglish(900, false);
-// threeDigitNumberToEnglish(901, false);
-// threeDigitNumberToEnglish(911, false);
-// threeDigitNumberToEnglish(920, false);
-// threeDigitNumberToEnglish(924, false);
-// threeDigitNumberToEnglish(999, false);
-
-console.log(numberToEnglish(-100000123456000360024010));
+// console.log(numberToEnglish(-100000123456000360024010));
 
 // precache zero - one hundred?
 // what values to hard-code? which to concatenate from others
     // missing eighteen + eighty
 // float precision 
 
+// Iterate backwards over number, 
+// then reverse string to avoid float errors
+
+// Make sure to read exactly what output is expected 
+// even if it's not actually grammatical/semantic
+    // (hypens in tens range ie. twenty-one vs twenty one)
+    // (also capitalization of numbers? One, Two, Three)
 
