@@ -9,13 +9,11 @@ function mostAliveYear(lifespans) {
             deaths.removeMin();
         }
         deaths.add(lifespan[1]);
-        console.log(deaths.size());
         if (deaths.size() > maxCount) {
             maxCount = deaths.size();
             maxYear = lifespan[0];
         }        
     }
-    console.log(maxYear);
     return maxYear;
 }
 
@@ -46,11 +44,9 @@ class MinHeap {
 function mostAliveYearLinear(lifespans) {
     let years = new Array(102).fill(0);
     for (let lifespan of lifespans) {
-        console.log(lifespan);
         years[lifespan[0] - 1900] ++;
         years[lifespan[1] + 1 - 1900] --;
     }
-    console.log(years);
     let maxCount = 0;
     let maxYear = 1900;
     for (let i = 1; i < years.length; i++) {
