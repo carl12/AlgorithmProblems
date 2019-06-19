@@ -43,14 +43,35 @@ class MinHeap {
     }
 }
 
-// let data = [
-//     [1900, 1910],
-//     [1906, 1907],
-//     [1908, 1915],
-//     [1919, 1930],
-//     [1920, 1923],
-//     [1922, 1923],
-//     [1925, 1929],
-// ];
+function mostAliveYearLinear(lifespans) {
+    let years = new Array(102).fill(0);
+    for (let lifespan of lifespans) {
+        console.log(lifespan);
+        years[lifespan[0] - 1900] ++;
+        years[lifespan[1] + 1 - 1900] --;
+    }
+    console.log(years);
+    let maxCount = 0;
+    let maxYear = 1900;
+    for (let i = 1; i < years.length; i++) {
+        years[i] = years[i] + years[i - 1];
+        if (years[i] > maxCount) {
+            maxCount = years[i];
+            maxYear = 1900 + i;
+        }
+    }
+    return maxYear;
 
-// mostAliveYear(data);
+}
+
+let data = [
+    [1900, 1910],
+    [1906, 1907],
+    [1908, 1915],
+    [1919, 1930],
+    [1920, 1923],
+    [1922, 1923],
+    [1925, 1929],
+];
+
+mostAliveYearLinear(data);
