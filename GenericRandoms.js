@@ -37,7 +37,25 @@ const randomChoice = (options) => {
   return options[randomRange(0, options.length)];
 }
 
+const randomString = (len = 10, chars = 3) => {
+  let charChoice = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k'].slice(0, chars);
+  let myLen = randomRange(0, len);
+  let arr = [];
+  for (let i = 0; i < myLen; i++) {
+    arr.push(randomChoice(charChoice));
+  }
+  return arr.join('');
+
+}
 
 const wrapper = (a) => (...b) => [a(...b)];
 
-module.exports = { randomFloatArr, ascendingArr, descendingArr, randomChoiceArr, wrapper }
+module.exports = { 
+  randomFloatArr, 
+  ascendingArr, 
+  descendingArr, 
+  randomChoiceArr, 
+  randomString,
+  wrapper,
+  
+};
