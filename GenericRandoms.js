@@ -51,6 +51,7 @@ const randomString = (len = 10, chars = 3) => {
 const wrapper = (a) => (...b) => [a(...b)];
 
 module.exports = { 
+  randomRange,
   randomFloatArr, 
   ascendingArr, 
   descendingArr, 
