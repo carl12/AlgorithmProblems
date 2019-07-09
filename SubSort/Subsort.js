@@ -1,6 +1,8 @@
  let rnd = require('../GenericRandoms');
+ let timer = require('../SolutionRunner');
 
 function subSort(arr) {
+  
   let lastInPlace = arr.length - 1;
   let firstInPlaceFromEnd = 0;
   for (let i = 1; i < arr.length; i++) {
@@ -21,10 +23,13 @@ function subSort(arr) {
     }
   }
 
-  // TODO - manually find min and max
-  let middle = arr.slice(lastInPlace, firstInPlaceFromEnd + 1);
-  let minMiddle = Math.min(...middle);
-  let maxMiddle = Math.max(...middle);
+  let minMiddle = arr[lastInPlace];
+  let maxMiddle = arr[lastInPlace];
+  for (let i = lastInPlace; i <= firstInPlaceFromEnd; i++) {
+    let curr = arr[i];
+    maxMiddle = Math.max(curr, maxMiddle);
+    minMiddle = Math.min(curr, minMiddle);
+  }
 
   let left = lastInPlace;
   while (left > 0 && minMiddle <= arr[left - 1]) {
@@ -72,10 +77,12 @@ function findFurthestRightLessThanMax(arr) {
 }
 
 // for (var i = 0; i < 10000; i++ ){ 
-//   let arr = rnd.randomFloatArr(4);
+//   let arr = rnd.randomFloatArr(40);
 //   let a = subSort(arr);
 //   let b = subSort2(arr);
 //   if (a[0] !== b[0] || a[1] !== b[1]) {
 //     console.log(a, b);
 //   }
 // }
+
+timer([subSort, subSort2], rnd.wrapper(rnd.randomFloatArr), [100000, 5], 1000);
