@@ -1,6 +1,6 @@
 
 function kthMultiple(k){
-  let primes = [3, 5, 7, 11];
+  let primes = [3, 5, 7];
   let multLevels = [];
   let counters = [];
   primes.forEach((_, i) => {
@@ -29,5 +29,35 @@ function kthMultiple(k){
   return multLevels[primes.length - 1];
 }
 
+function kthMultiple2(k) {
+  let val = 0;
+  let q3 = [3];
+  let q5 = [5];
+  let q7 = [7];
+  let ans = [1];
+  for (let i = 1; i < k; i++) {
+    let v3 = q3[0] || Infinity;
+    let v5 = q5[0] || Infinity;
+    let v7 = q7[0] || Infinity;
 
+    val = Math.min(v3, v5, v7) 
+    if (val === v3) {
+      q3.shift();
+      q3.push(3 * val);
+      q5.push(5 * val);
+    } else if (val === v5) {
+      q5.shift();
+      q5.push(5 * val);
+    } else {
+      q7.shift();
+    }
+    q7.push(7 * val);
+    ans.push(val);
+  }
+  console.log(ans);
+  return ans;
+}
+
+
+kthMultiple2(20);
 kthMultiple(20);
