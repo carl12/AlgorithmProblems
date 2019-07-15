@@ -1,4 +1,5 @@
-
+const timer = require('../SolutionRunner');
+const rnd = require('../GenericRandoms');
 function countOf2s(n){
   if (n < 2) {
     return 0;
@@ -61,4 +62,6 @@ function countOf2s2(n) {
 //     return;
 //   }
 // }
+
+timer([countOf2s, countOf2s2], () => [rnd.randomRange(0, 1000000)], [], 10000000);
 
