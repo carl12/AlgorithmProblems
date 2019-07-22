@@ -1,15 +1,22 @@
 
-function Multisearch(a, b){
-  let map = {};
-  b.forEach(val => map[val] = []);
-  let loc = 0;
-  for (let word of a.split(' ')) {
-    if (map[word]) {
-      map[word].push(loc);
-    }
-    loc += word.length + 1;
+function Multisearch(a, b) {
+  let prefixTree = buildTrie(b);
+  let map = b.reduce((obj, word) => obj[word] = [], {});
+  for (let i = 0; i < a.length; i++) {
+    addMatchesFrom(str, map, trie, i);
   }
   return map;
+
+  function addMatchesFrom(str, obj, trie, i) {
+    let curr = trie;
+    let word = ''
+    for (; i < str.length && curr; i++) {
+      word += str[i];
+      curr = trie.childred[str[i]];
+      if (curr.isEnd) {
+        obj[word].push(i)
+      }
+    }
+  }
 }
 
-console.log(Multisearch('the cat sat on the mat and said the mat', ['the', 'sat', 'cat']));
