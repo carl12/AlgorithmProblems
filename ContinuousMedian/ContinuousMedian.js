@@ -49,6 +49,59 @@ class ContinuousMedian {
   }
 }
 
+class ContinuousMedian2 {
+  constructor() {
+    this.low = new Heap(); //max heap
+    this.high = new Heap([], null, (a, b) => b - a); //min heap
+  }
+
+  addNew(k) {
+    if (this.high.length === 0) {
+      this.high.push(k);
+    } else if (this.high.length > this.low.length) {
+      if (k < this.high.peek()) {
+        this.low.push(k);
+      } else {
+        this.low.push(this.high.pop());
+        this.low.push(k);
+      }
+    } else {
+      if (k > this.low.peek()) {
+        this.high.push(k);
+      } else {
+        this.high.push(this.low.pop());
+        this.low.push(k);
+      }
+    }
+    return this.getMedian();
+  }
+
+  addNew2(k) {
+    if (this.high.length === 0) {
+      this.high.push(k);
+    } else if (k < this.low.peek()) {
+      this.low.push(k);
+      if (this.low.length > this.high.length) {
+        this.high.push(this.low.pop());
+      }
+    } else {
+      this.high.push(k);
+      if (this.high.length > this.low.length + 1) {
+        
+      }
+    }
+    
+  }
+
+  getMedian() {
+    if (this.low.length < this.high.length) {
+      return this.high.peek();
+    } else {
+      return (this.low.peek() + this.high.peek()) / 2;
+    }
+  }
+}
+
 let med = new ContinuousMedian();
 
 console.log(med.addNew(1));
@@ -61,3 +114,6 @@ console.log(med.addNew(12));
 console.log(med.addNew(15));
 console.log(med.addNew(16));
 console.log(med.addNew(-1));
+
+
+// consider adding more elements to one heap
