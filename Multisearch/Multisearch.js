@@ -1,7 +1,10 @@
 
 function Multisearch(a, b) {
   let prefixTree = buildTrie(b);
-  let map = b.reduce((obj, word) => obj[word] = [], {});
+  let map = b.reduce((obj, word) => {
+    obj[word] = [];
+    return obj;
+  }, {});
   for (let i = 0; i < a.length; i++) {
     addMatchesFrom(str, map, trie, i);
   }
