@@ -33,10 +33,3 @@ MissingTwo([1,3,5, 6, 7, 2, 4, 10]);
 // Quadratic formula for 
 // BigInt for factorials
 // Use sum of squares
-
-let a = 30001n;
-let b = BigInt(1000000000000000000008n);
-console.log(b);
-console.log(typeof (a * b));
-console.log(a * b);
-console.log(1234567890123456789n * 1200000000000000000000000000000000003n);
