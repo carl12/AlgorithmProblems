@@ -121,3 +121,7 @@ function WordTransformer2(dictionary, start, end) {
 // var a = buildGraph(new Set(['aaa', 'baa', 'bba']), 'aaa');
 var aasdf = WordTransformer2(new Set(['aaa', 'baa', 'bba']), 'aaa', 'bba');
 console.log(aasdf);
+
+// rabbit hole of building graph
+// think through entire problem before starting sub-part
+// stop if found lost cause
