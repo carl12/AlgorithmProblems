@@ -1,25 +1,24 @@
-// input: string of name list copied from sheets
-// ouput: unique pair
+// How to use: Copty paste old pairs from sheet
 
-let rawPairs = `Amar Vadhia	Zach Thomas	Amar Vadhia	David Brooks	Amar Vadhia	Tina Le
-Andrew Poon	Pri Pramanik	Andrew Poon	Yi Sun	Andrew Poon	Marvin Ho
-Brandon Yu	Yi Sun	Brandon Yu	Kenny Lee	Brandon Yu	Pri Pramanik
-Cassie Tong	Kenny Lee	Cassie Tong	Joe Berthoud	Cassie Tong	Min Choo
-Chad Archila	Yunyun Liu	Chad Archila	Marvin Ho	Chad Archila	Chris Chan
-Christian Sarmiento	Min Choo	Christian Sarmiento	Jennie Zeng	Christian Sarmiento	Janice Lam
-Connie Lun	David Brooks	Dorris Wong	Zach Thomas	Connie Lun	Joe Berthoud
-Dorris Wong	Jennie Zeng	Eline Xavier	Joel Kaplan	Dorris Wong	Shane Zhao
-Eline Xavier	Joe Berthoud	Esme Ling	Chris Chan	Eline Xavier	Yi Sun
-Esme Ling	Joel Kaplan	Jackson Galan	Tina Le	Esme Ling	David Brooks
-Jackson Galan	William Zhou	Janelle Bautista	William Zhou	Jackson Galan	Poema Cavalcanti
-Janelle Bautista	Poema Cavalcanti	Jonathan Hsieh	Min Choo	Janelle Bautista	Zach Thomas
-Jonathan Hsieh	Tina Le	Julio Fuentes	Janice Lam	Jonathan Hsieh	Joel Kaplan
-Julio Fuentes	Chris Chan	Katherine Wang	Shane Zhao	Julio Fuentes	Kenny Lee
-Katherine Wang	Janice Lam	Keaton Tatooles	Poema Cavalcanti	Katherine Wang	Yunyun Liu
-Keaton Tatooles	Shane Zhao	Lee Graham	Pri Pramanik	Keaton Tatooles	William Zhou
-Lee Graham	Marvin Ho	Maia Ling	Yunyun Liu	Lee Graham	Jennie Zeng`
+let pairStr = `Amar Vadhia	Zach Thomas	Amar Vadhia	David Brooks	Amar Vadhia	Shane Zhao	Amar Vadhia	Jennie Zeng	Amar Vadhia	Yi Sun
+Andrew Poon	Pri Pramanik	Andrew Poon	Yi Sun	Andrew Poon	Joe Berthoud	Andrew Poon	Zach Thomas	Andrew Poon	Kenny Lee
+Brandon Yu	Yi Sun	Brandon Yu	Kenny Lee	Brandon Yu	Chris Chan	Brandon Yu	Joe Berthoud	Brandon Yu	Zach Thomas
+Cassie Tong	Kenny Lee	Cassie Tong	Joe Berthoud	Cassie Tong	Poema Cavalcanti	Cassie Tong	Chris Chan	Cassie Tong	David Brooks
+Chad Archila	Yunyun Liu	Chad Archila	Marvin Ho	Chad Archila	Janice Lam	Chad Archila	Pri Pramanik	Chad Archila	Joe Berthoud
+Christian Sarmiento	Min Choo	Christian Sarmiento	Jennie Zeng	Christian Sarmiento	David Brooks	Christian Sarmiento	Tina Le	Christian Sarmiento	Poema Cavalcanti
+Connie Lun	David Brooks	Dorris Wong	Zach Thomas	Connie Lun	Pri Pramanik	Connie Lun	Min Choo	Connie Lun	Marvin Ho
+Dorris Wong	Jennie Zeng	Eline Xavier	Joel Kaplan	Dorris Wong	Yi Sun	Dorris Wong	Kenny Lee	Dorris Wong	William Zhou
+Eline Xavier	Joe Berthoud	Esme Ling	Chris Chan	Eline Xavier	Tina Le	Eline Xavier	Poema Cavalcanti	Eline Xavier	Shane Zhao
+Esme Ling	Joel Kaplan	Jackson Galan	Tina Le	Esme Ling	Jennie Zeng	Esme Ling	Yi Sun	Esme Ling	Janice Lam
+Jackson Galan	William Zhou	Janelle Bautista	William Zhou	Jackson Galan	Kenny Lee	Jackson Galan	Shane Zhao	Jackson Galan	Chris Chan
+Janelle Bautista	Poema Cavalcanti	Jonathan Hsieh	Min Choo	Janelle Bautista	Marvin Ho	Janelle Bautista	Joel Kaplan	Janelle Bautista	Min Choo
+Jonathan Hsieh	Tina Le	Julio Fuentes	Janice Lam	Jonathan Hsieh	Joel Kaplan	Jonathan Hsieh	Janice Lam	Jonathan Hsieh	Yunyun Liu
+Julio Fuentes	Chris Chan	Katherine Wang	Shane Zhao	Julio Fuentes	Min Choo	Julio Fuentes	William Zhou	Julio Fuentes	Tina Le
+Katherine Wang	Janice Lam	Keaton Tatooles	Poema Cavalcanti	Katherine Wang	Zach Thomas	Katherine Wang	Marvin Ho	Katherine Wang	Pri Pramanik
+Keaton Tatooles	Shane Zhao	Lee Graham	Pri Pramanik	Keaton Tatooles	Yunyun Liu	Keaton Tatooles	David Brooks	Keaton Tatooles	Jennie Zeng
+Lee Graham	Marvin Ho	Maia Ling	Yunyun Liu	Lee Graham	William Zhou	Lee Graham	Yunyun Liu	Lee Graham	Joel Kaplan`
 
-let rawNames1 = `Amar Vadhia
+let group1Str = `Amar Vadhia
 Andrew Poon
 Brandon Yu
 Cassie Tong
@@ -37,7 +36,7 @@ Katherine Wang
 Keaton Tatooles
 Lee Graham`;
 
-let rawNames2 = `Zach Thomas
+let group2Str = `Zach Thomas
 Pri Pramanik
 Yi Sun
 Kenny Lee
@@ -76,7 +75,7 @@ function shuffle(array) {
   return array; 
 }
 
-function makeNewPair(pairs, group1, group2) {
+function genOldPairSet(pairs, group1, group2) {
   let oldPairs = {};
   group1.forEach(name => oldPairs[name] = new Set());
   group2.forEach(name => oldPairs[name] = new Set());
@@ -88,37 +87,65 @@ function makeNewPair(pairs, group1, group2) {
       oldPairs[pair[1]].add(pair[0]);
     }
   });
-  console.log(group1, group2);
-  console.log(oldPairs);
+  return oldPairs;
+}
+
+function removeForcedPairs(group1, group2, forcedPairs) {
+  let group1Sl = group1.slice();
+  let group2Sl = group2.slice();
+  forcedPairs.forEach(pair => {
+    group1Sl.splice(group1Sl.indexOf(pair[0]), 1);
+    group2Sl.splice(group2Sl.indexOf(pair[1]), 1);
+  });
+  return [group1Sl, group2Sl];
+}
+
+function generateRandomPair(group2) {
+  return shuffle(group2.slice());
+}
+
+function isValidPair(oldPairs, group1, testingGroup2) {
+  valid = true;
+  for (let i = 0; i < testingGroup2.length; i++) {
+    if (oldPairs[testingGroup2[i]].has(group1[i])) {
+      valid = false;
+    } 
+  }
+  return valid;
+}
+
+function genOutputStr(group1, group2, forcedPairs = []) {
+  let arr = group2.map((p2, i) => [group1[i], p2]);
+  arr.push(...forcedPairs);
+  arr.sort();
+  let final = arr.map(pair => pair.join(',')).join('\n');
+  return final;
+}
+
+function makeNewPair(pairs, group1, group2, forcedPairs = []) {
+  oldPairs = genOldPairSet(pairs, group1, group2);
+  let [group1Sl, group2Sl] = removeForcedPairs(group1, group2, forcedPairs);
+
   let valid = false;
   let tmp;
   while (!valid) {
     console.log('generating random pair');
-    tmp = shuffle(group2.slice());
-    valid = true;
-    for (let i = 0; i < tmp.length; i++) {
-      if (oldPairs[tmp[i]].has(group1[i])) {
-        valid = false;
-        // console.log('found invalid', tmp[i], group1[i]);
-      }
-    }
-    
+    tmp = generateRandomPair(group2Sl);
+    valid = isValidPair(oldPairs, group1Sl, tmp)    
   }
-  console.log('found valid pair');
-  let arr = tmp.map((p2, i) => [group1[i], p2]);
-  let final = arr.map(pair => pair.join(',')).join('\n');
-  console.log(final);
-  return final;
+  
+  console.log(genOutputStr(group1Sl, tmp, forcedPairs))
+  return ;
 }
 
 function makeNameList(rawNames) {
   return rawNames.split('\n');
 }
 
-let nameList1 = makeNameList(rawNames1);
-let nameList2 = makeNameList(rawNames2);
-let pairList = NamePairMaker(rawPairs);
-makeNewPair(pairList, nameList1, nameList2);
+let nameList1 = makeNameList(group1Str);
+let nameList2 = makeNameList(group2Str);
+let pairList = NamePairMaker(pairStr);
+makeNewPair(pairList, nameList1, nameList2, []);
 
 
 
