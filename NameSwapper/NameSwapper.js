@@ -1,4 +1,9 @@
-// How to use: Copty paste old pairs from sheet
+// How to use: 
+// Set group1Str and group2Str as names split by newlines
+// Copy paste old output into pairStr
+// run file
+// copy valid output into sheets (use split text into columns)
+// enjoy! - for questions ask carl17r@gmail.com
 
 let pairStr = `Amar Vadhia	Zach Thomas	Amar Vadhia	David Brooks	Amar Vadhia	Shane Zhao	Amar Vadhia	Jennie Zeng	Amar Vadhia	Yi Sun
 Andrew Poon	Pri Pramanik	Andrew Poon	Yi Sun	Andrew Poon	Joe Berthoud	Andrew Poon	Zach Thomas	Andrew Poon	Kenny Lee
@@ -128,10 +133,17 @@ function makeNewPair(pairs, group1, group2, forcedPairs = []) {
 
   let valid = false;
   let tmp;
-  while (!valid) {
+  let tries = 0;
+  let maxTries = 1000;
+  while (!valid && tries < maxTries) {
     console.log('generating random pair');
     tmp = generateRandomPair(group2Sl);
-    valid = isValidPair(oldPairs, group1Sl, tmp)    
+    valid = isValidPair(oldPairs, group1Sl, tmp)   
+    tries ++;
+  }
+  if (tries >= maxTries) {
+    console.log(`gave up after ${maxTries} tries`);
+    return;
   }
   
   console.log(genOutputStr(group1Sl, tmp, forcedPairs))
