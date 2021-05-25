@@ -113,23 +113,22 @@ function sudokuChecker(board) {
 }
 
 function sudokuChecker2(board) {
-
-board = board.split('\n').map(row => row.split(''));
-let rows = new Array(9).fill(0);
-let cols = new Array(9).fill(0);
-let boxes = new Array(9).fill(0);
-let val;
-for (var i = 0; i < board.length; i++) {
-    for (var j = 0; j < board.length; j++) {
-    val = board[i][j];
-    rows[i] |= 1 << val;
-    cols[j] |= 1 << val;
-    let boxNum = 3 * Math.floor(i / 3) + Math.floor(j / 3);
-    boxes[boxNum] |= 1 << val;
+    board = board.split('\n').map(row => row.split(''));
+    let rows = new Array(9).fill(0);
+    let cols = new Array(9).fill(0);
+    let boxes = new Array(9).fill(0);
+    let val;
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board.length; j++) {
+        val = board[i][j];
+        rows[i] |= 1 << val;
+        cols[j] |= 1 << val;
+        let boxNum = 3 * Math.floor(i / 3) + Math.floor(j / 3);
+        boxes[boxNum] |= 1 << val;
+        }
     }
-}
-let check = (val) => val === 1022;
-return (rows.every(check) && cols.every(check) && boxes.every(check)) ? 'solved' : 'invalid';
+    let check = (val) => val === 1022;
+    return (rows.every(check) && cols.every(check) && boxes.every(check)) ? 'solved' : 'invalid';
 }
 
 function sudokuChecker3(board) {
