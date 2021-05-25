@@ -1,0 +1,8 @@
+[package]
+name = "PythonPerf2"
+version = "0.1.0"
+authors = ["carl12 <carl17r@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+rand="0.3"
