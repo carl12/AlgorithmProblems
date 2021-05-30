@@ -6,18 +6,30 @@ function timeFunctions(functions, generatorFunction, generatorInput, repetitions
   for (let i = 0; i < nFuncs; i++) {
     timers.push(new Stopwatch());
   }
+  let sols = [];
   for (let i = 0; i < repetitions; i++) {
+    sols.length = 0;
+    const input = generatorFunction(...generatorInput);
     for (let j = 0; j < nFuncs; j++) {
       generatorTimer.start();
-      const input = generatorFunction(...generatorInput);
       generatorTimer.stop();
       timers[j].start();
-      functions[j](...input);
+      let sol = functions[j](...jankyCopy(input));
       timers[j].stop();
+      sols.push(sol);
+    }
+    if ((new Set(sols)).size !== 1) {
+      console.log(input);
+      console.log(sols);
+      console.log();
     }
   }
   console.log()
   timers.forEach(timer => console.log("total time: " + timer.getTotal()));
+}
+
+function jankyCopy(obj) {
+  return JSON.parse(JSON.stringify(obj));
 }
 
 class Stopwatch {

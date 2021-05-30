@@ -1,0 +1,1 @@
+\nfunction KthBinaryBit(){}
