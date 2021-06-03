@@ -53,6 +53,17 @@ const makePuzzle = () => [
 // const puzzle2 = new Array(9).fill(0).map(() => new Array(9).fill(0));
 // console.log(sudokuSolver(puzzle3), 'solution');
 
+const puzzle = [
+  [ 0, 0, 0, 0, 0, 3, 0, 1, 7],
+  [ 0, 1, 5, 0, 0, 9, 0, 0, 8],
+  [ 0, 6, 0, 0, 0, 0, 0, 0, 0],
+  [ 1, 0, 0, 0, 0, 7, 0, 0, 0],
+  [ 0, 0, 9, 0, 0, 0, 2, 0, 0],
+  [ 0, 0, 0, 5, 0, 0, 0, 0, 4],
+  [ 0, 0, 0, 0, 0, 0, 0, 2, 0],
+  [ 5, 0, 0, 6, 0, 0, 3, 4, 0],
+  [ 3, 4, 0, 2, 0, 0, 0, 0, 0 ]
+];
 console.time();
 for (let i = 0; i < 4000; i++) {
     sudokuSolver(makePuzzle());
@@ -156,13 +167,13 @@ function sudokuSolver(board) {
     const rowBans = new Array(9).fill(0).map(() => new Set());
     const colBans = new Array(9).fill(0).map(() => new Set());
     // box numbered from left to right then top to bottom
-    const boxBans = new Array(9).fill(0).map(val => new Set());
-    zeroCount = 0;
+    const boxBans = new Array(9).fill(0).map(() => new Set());
+    unfilledSquares = 0;
     for (const i in board) {
         for (const j in board[i]) {
             const val = board[i][j];
             if (val === 0) {
-                zeroCount++;
+                unfilledSquares++;
                 continue;
             }
             // check for invalids
@@ -172,7 +183,7 @@ function sudokuSolver(board) {
             boxBans[Math.floor(i / 3) * 3 + Math.floor(j / 3)].add(val);
         }
     }
-    if (zeroCount === 0) {
+    if (unfilledSquares === 0) {
         // console.log(board, 'asdf');
         return JSON.parse(JSON.stringify(board));
     }
@@ -206,10 +217,6 @@ function sudokuSolver(board) {
                 lowest = myPoss.size;
             }
         }
-    }
-    if (!bestGuess) {
-        // console.log(`No solution found at depth ${zeroCount}`)
-        return null;
     }
 
     // TODO: investigate logic for how humans solve (ie. two cols banned in box, and two squares full in remaining col)
