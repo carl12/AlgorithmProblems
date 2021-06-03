@@ -40,195 +40,195 @@ const times = 5000;
 // runTest(sudokuChecker2);
 // runTest(sudokuChecker3);
 const makePuzzle = () => [
-    [1,2,3,4,5,6,7,8,9],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
+  [1, 2, 3, 4, 5, 6, 7, 8, 9],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 // const puzzle2 = new Array(9).fill(0).map(() => new Array(9).fill(0));
 // console.log(sudokuSolver(puzzle3), 'solution');
 
 const puzzle = [
-  [ 0, 0, 0, 0, 0, 3, 0, 1, 7],
-  [ 0, 1, 5, 0, 0, 9, 0, 0, 8],
-  [ 0, 6, 0, 0, 0, 0, 0, 0, 0],
-  [ 1, 0, 0, 0, 0, 7, 0, 0, 0],
-  [ 0, 0, 9, 0, 0, 0, 2, 0, 0],
-  [ 0, 0, 0, 5, 0, 0, 0, 0, 4],
-  [ 0, 0, 0, 0, 0, 0, 0, 2, 0],
-  [ 5, 0, 0, 6, 0, 0, 3, 4, 0],
-  [ 3, 4, 0, 2, 0, 0, 0, 0, 0 ]
+  [0, 0, 0, 0, 0, 3, 0, 1, 7],
+  [0, 1, 5, 0, 0, 9, 0, 0, 8],
+  [0, 6, 0, 0, 0, 0, 0, 0, 0],
+  [1, 0, 0, 0, 0, 7, 0, 0, 0],
+  [0, 0, 9, 0, 0, 0, 2, 0, 0],
+  [0, 0, 0, 5, 0, 0, 0, 0, 4],
+  [0, 0, 0, 0, 0, 0, 0, 2, 0],
+  [5, 0, 0, 6, 0, 0, 3, 4, 0],
+  [3, 4, 0, 2, 0, 0, 0, 0, 0]
 ];
 console.time();
 for (let i = 0; i < 4000; i++) {
-    sudokuSolver(makePuzzle());
+  sudokuSolver(makePuzzle());
 }
 console.timeEnd();
 
 
 
 function runTest(fn) {
-    console.time(fn.name);
-    for (var i = 0; i < times; i++) {
-      fn(puzzle);
-    }
-    console.timeEnd(fn.name);
+  console.time(fn.name);
+  for (var i = 0; i < times; i++) {
+    fn(puzzle);
+  }
+  console.timeEnd(fn.name);
 }
 
 function sudokuChecker(board) {
-    if (board.length != 89) {
+  if (board.length != 89) {
+    return 'invalid';
+  }
+  let boardArr = board.split('\n').map(row => row.split(''));
+
+  let nums = new Set();
+  for (var i = 0; i < boardArr.length; i++) {
+    nums = new Set();
+    for (var j = 0; j < boardArr.length; j++) {
+      nums.add(boardArr[i][j]);
+    }
+    if (nums.size !== 9) {
       return 'invalid';
     }
-    let boardArr = board.split('\n').map(row => row.split(''));
+  }
 
-    let nums = new Set();
+  for (var j = 0; j < boardArr.length; j++) {
+    nums = new Set();
     for (var i = 0; i < boardArr.length; i++) {
+      nums.add(boardArr[i][j]);
+    }
+    if (nums.size !== 9) {
+      return 'invalid';
+    }
+  }
+
+  for (var firstRow = 0; firstRow < boardArr.length; firstRow += 3) {
+    for (var firstCol = 0; firstCol < boardArr.length; firstCol += 3) {
       nums = new Set();
-      for (var j = 0; j < boardArr.length; j++) {
-        nums.add(boardArr[i][j]);
+      for (var i = firstRow; i < firstRow + 3; i++) {
+        for (var j = firstCol; j < firstCol + 3; j++) {
+          nums.add(boardArr[i][j]);
+        }
       }
       if (nums.size !== 9) {
         return 'invalid';
       }
     }
-
-    for (var j = 0; j < boardArr.length; j++) {
-      nums = new Set();
-      for (var i = 0; i < boardArr.length; i++) {
-        nums.add(boardArr[i][j]);
-      }
-      if (nums.size !== 9) {
-        return 'invalid';
-      }
-    }
-
-    for (var firstRow = 0; firstRow < boardArr.length; firstRow += 3) {
-      for (var firstCol = 0; firstCol < boardArr.length; firstCol += 3) {
-        nums = new Set();
-        for (var i = firstRow; i < firstRow + 3; i++) {
-          for (var j = firstCol; j < firstCol + 3; j++) {
-            nums.add(boardArr[i][j]);
-          }
-        }
-        if (nums.size !== 9) {
-          return 'invalid';
-        }
-      }
-    }
-    return 'solved';
+  }
+  return 'solved';
 }
 
 function sudokuChecker2(board) {
-    board = board.split('\n').map(row => row.split(''));
-    let rows = new Array(9).fill(0);
-    let cols = new Array(9).fill(0);
-    let boxes = new Array(9).fill(0);
-    let val;
-    for (var i = 0; i < board.length; i++) {
-        for (var j = 0; j < board.length; j++) {
-        val = board[i][j];
-        rows[i] |= 1 << val;
-        cols[j] |= 1 << val;
-        let boxNum = 3 * Math.floor(i / 3) + Math.floor(j / 3);
-        boxes[boxNum] |= 1 << val;
-        }
+  board = board.split('\n').map(row => row.split(''));
+  let rows = new Array(9).fill(0);
+  let cols = new Array(9).fill(0);
+  let boxes = new Array(9).fill(0);
+  let val;
+  for (var i = 0; i < board.length; i++) {
+    for (var j = 0; j < board.length; j++) {
+      val = board[i][j];
+      rows[i] |= 1 << val;
+      cols[j] |= 1 << val;
+      let boxNum = 3 * Math.floor(i / 3) + Math.floor(j / 3);
+      boxes[boxNum] |= 1 << val;
     }
-    let check = (val) => val === 1022;
-    return (rows.every(check) && cols.every(check) && boxes.every(check)) ? 'solved' : 'invalid';
+  }
+  let check = (val) => val === 1022;
+  return (rows.every(check) && cols.every(check) && boxes.every(check)) ? 'solved' : 'invalid';
 }
 
 function sudokuChecker3(board) {
-let rows = new Array(9).fill(0);
-let cols = new Array(9).fill(0);
-let boxes = new Array(9).fill(0);
-let val;
-let boxNum;
-for (var i = 0; i < board.length; i++) {
+  let rows = new Array(9).fill(0);
+  let cols = new Array(9).fill(0);
+  let boxes = new Array(9).fill(0);
+  let val;
+  let boxNum;
+  for (var i = 0; i < board.length; i++) {
     val = board[i];
-    if (val === '\n') {continue;}
+    if (val === '\n') { continue; }
     rows[Math.floor(i / 10)] |= 1 << val;
     cols[i % 10] |= 1 << val;
     boxNum = 3 * Math.floor(Math.floor(i / 10) / 3) + Math.floor((i % 10) / 3);
     boxes[boxNum] |= 1 << val;
-}
-let check = (val) => val === 1022;
-return (rows.every(check) && cols.every(check) && boxes.every(check)) ? 'solved' : 'invalid';
+  }
+  let check = (val) => val === 1022;
+  return (rows.every(check) && cols.every(check) && boxes.every(check)) ? 'solved' : 'invalid';
 }
 
 function sudokuSolver(board) {
-    // TODO: pass sets in as arguments and incrementally update as nums tried/undone
-    // TODO: keep track of number of zeroes in board as argument
-    const possible = board.map(row => row.map(() => new Set([1,2,3,4,5,6,7,8,9])));
-    const rowBans = new Array(9).fill(0).map(() => new Set());
-    const colBans = new Array(9).fill(0).map(() => new Set());
-    // box numbered from left to right then top to bottom
-    const boxBans = new Array(9).fill(0).map(() => new Set());
-    unfilledSquares = 0;
-    for (const i in board) {
-        for (const j in board[i]) {
-            const val = board[i][j];
-            if (val === 0) {
-                unfilledSquares++;
-                continue;
-            }
-            // check for invalids
+  // TODO: pass sets in as arguments and incrementally update as nums tried/undone
+  // TODO: keep track of number of zeroes in board as argument
+  const possible = board.map(row => row.map(() => new Set([1, 2, 3, 4, 5, 6, 7, 8, 9])));
+  const rowBans = new Array(9).fill(0).map(() => new Set());
+  const colBans = new Array(9).fill(0).map(() => new Set());
+  // box numbered from left to right then top to bottom
+  const boxBans = new Array(9).fill(0).map(() => new Set());
+  unfilledSquares = 0;
+  for (const i in board) {
+    for (const j in board[i]) {
+      const val = board[i][j];
+      if (val === 0) {
+        unfilledSquares++;
+        continue;
+      }
+      // check for invalids
 
-            rowBans[i].add(val);
-            colBans[j].add(val);
-            boxBans[Math.floor(i / 3) * 3 + Math.floor(j / 3)].add(val);
-        }
+      rowBans[i].add(val);
+      colBans[j].add(val);
+      boxBans[Math.floor(i / 3) * 3 + Math.floor(j / 3)].add(val);
     }
-    if (unfilledSquares === 0) {
-        // console.log(board, 'asdf');
-        return JSON.parse(JSON.stringify(board));
-    }
-    // console.log(zeroCount);
-    let bestGuess = null;
-    let lowest = 10;
-    for (const i in board) {
-        for (const j in board) {
-            const val = board[i][j];
-            if (val !== 0) {
-                continue;
-            }
-            // TODO: use data structure that is better at doing union (bits?)
-            const banned = new Set([...rowBans[i], ...colBans[j], ...boxBans[Math.floor(i / 3) * 3 + Math.floor(j / 3)]])
-            const myPoss = possible[i][j];
-            banned.forEach(val => myPoss.delete(val));
-            if (myPoss.size === 0) {
-                // console.log(`No possible for ${[i, j]} at depth ${zeroCount}; ${Array.from(rowBans[i])} | ${Array.from(colBans[j])} | ${Array.from(boxBans[Math.floor(i / 3) * 3 + Math.floor(j / 3)])}`);
-                // console.log(JSON.stringify(board));
-                return null;
-            } else if (myPoss.size === 1) {
-                const poss = Array.from(myPoss)[0];
-                board[i][j] = poss;
-                const sol = sudokuSolver(board);
-                board[i][j] = 0;
-                return sol;
-            }
-            // console.log(myPoss);
-            if (myPoss.size < lowest) {
-                bestGuess = [i, j, myPoss];
-                lowest = myPoss.size;
-            }
-        }
-    }
-
-    // TODO: investigate logic for how humans solve (ie. two cols banned in box, and two squares full in remaining col)
-    const [ i, j, posVals ] = bestGuess;
-    // console.log(`At Depth ${zeroCount} at location ${[i, j]} trying ${Array.from(posVals)}`)
-    for (const val of posVals) {
-        board[i][j] = val;
+  }
+  if (unfilledSquares === 0) {
+    // console.log(board, 'asdf');
+    return JSON.parse(JSON.stringify(board));
+  }
+  // console.log(zeroCount);
+  let bestGuess = null;
+  let lowest = 10;
+  for (const i in board) {
+    for (const j in board) {
+      const val = board[i][j];
+      if (val !== 0) {
+        continue;
+      }
+      // TODO: use data structure that is better at doing union (bits?)
+      const banned = new Set([...rowBans[i], ...colBans[j], ...boxBans[Math.floor(i / 3) * 3 + Math.floor(j / 3)]])
+      const myPoss = possible[i][j];
+      banned.forEach(val => myPoss.delete(val));
+      if (myPoss.size === 0) {
+        // console.log(`No possible for ${[i, j]} at depth ${zeroCount}; ${Array.from(rowBans[i])} | ${Array.from(colBans[j])} | ${Array.from(boxBans[Math.floor(i / 3) * 3 + Math.floor(j / 3)])}`);
+        // console.log(JSON.stringify(board));
+        return null;
+      } else if (myPoss.size === 1) {
+        const poss = Array.from(myPoss)[0];
+        board[i][j] = poss;
         const sol = sudokuSolver(board);
-        if (sol) {
-            return sol;
-        }
         board[i][j] = 0;
+        return sol;
+      }
+      // console.log(myPoss);
+      if (myPoss.size < lowest) {
+        bestGuess = [i, j, myPoss];
+        lowest = myPoss.size;
+      }
     }
-    return null;
+  }
+
+  // TODO: investigate logic for how humans solve (ie. two cols banned in box, and two squares full in remaining col)
+  const [i, j, posVals] = bestGuess;
+  // console.log(`At Depth ${zeroCount} at location ${[i, j]} trying ${Array.from(posVals)}`)
+  for (const val of posVals) {
+    board[i][j] = val;
+    const sol = sudokuSolver(board);
+    if (sol) {
+      return sol;
+    }
+    board[i][j] = 0;
+  }
+  return null;
 }
