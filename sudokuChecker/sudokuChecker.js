@@ -53,7 +53,7 @@ const makePuzzle = () => [
 // const puzzle2 = new Array(9).fill(0).map(() => new Array(9).fill(0));
 // console.log(sudokuSolver(puzzle3), 'solution');
 
-const puzzle = [
+const puzzle2 = [
   [0, 0, 0, 0, 0, 3, 0, 1, 7],
   [0, 1, 5, 0, 0, 9, 0, 0, 8],
   [0, 6, 0, 0, 0, 0, 0, 0, 0],
@@ -64,12 +64,34 @@ const puzzle = [
   [5, 0, 0, 6, 0, 0, 3, 4, 0],
   [3, 4, 0, 2, 0, 0, 0, 0, 0]
 ];
-console.time();
-for (let i = 0; i < 4000; i++) {
-  sudokuSolver(makePuzzle());
-}
-console.timeEnd();
 
+const sol2 = [
+  [ 2, 9, 4, 8, 6, 3, 5, 1, 7 ],
+  [ 7, 1, 5, 4, 2, 9, 6, 3, 8 ],
+  [ 8, 6, 3, 7, 5, 1, 4, 9, 2 ],
+  [ 1, 5, 2, 9, 4, 7, 8, 6, 3 ],
+  [ 4, 7, 9, 3, 8, 6, 2, 5, 1 ],
+  [ 6, 3, 8, 5, 1, 2, 9, 7, 4 ],
+  [ 9, 8, 6, 1, 3, 4, 7, 2, 5 ],
+  [ 5, 2, 1, 6, 7, 8, 3, 4, 9 ],
+  [ 3, 4, 7, 2, 9, 5, 1, 8, 6 ]
+];
+
+const puzzle3 = [
+  [0, 1, 0, 0, 0, 0, 0, 0, 0],
+  [0, 2, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [3, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 3, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+]
+
+let calls = 0;
+console.log(sudokuChecker(sudokuSolver(puzzle2)));
+console.log(calls);
 
 
 function runTest(fn) {
@@ -81,6 +103,9 @@ function runTest(fn) {
 }
 
 function sudokuChecker(board) {
+  if (Array.isArray(board)) {
+    board = board.map(row => row.join('')).join('\n');
+  }
   if (board.length != 89) {
     return 'invalid';
   }
@@ -159,8 +184,8 @@ function sudokuChecker3(board) {
   let check = (val) => val === 1022;
   return (rows.every(check) && cols.every(check) && boxes.every(check)) ? 'solved' : 'invalid';
 }
-
 function sudokuSolver(board) {
+  calls ++;
   // TODO: pass sets in as arguments and incrementally update as nums tried/undone
   // TODO: keep track of number of zeroes in board as argument
   const possible = board.map(row => row.map(() => new Set([1, 2, 3, 4, 5, 6, 7, 8, 9])));
@@ -201,10 +226,9 @@ function sudokuSolver(board) {
       const myPoss = possible[i][j];
       banned.forEach(val => myPoss.delete(val));
       if (myPoss.size === 0) {
-        // console.log(`No possible for ${[i, j]} at depth ${zeroCount}; ${Array.from(rowBans[i])} | ${Array.from(colBans[j])} | ${Array.from(boxBans[Math.floor(i / 3) * 3 + Math.floor(j / 3)])}`);
-        // console.log(JSON.stringify(board));
         return null;
       } else if (myPoss.size === 1) {
+        // Naked single
         const poss = Array.from(myPoss)[0];
         board[i][j] = poss;
         const sol = sudokuSolver(board);
@@ -219,9 +243,43 @@ function sudokuSolver(board) {
     }
   }
 
-  // TODO: investigate logic for how humans solve (ie. two cols banned in box, and two squares full in remaining col)
+  // Hidden single for blocks
+  for (let box = 0; box < 9; box++) {
+    const startI = Math.floor(box / 3) * 3;
+    const startJ = (box % 3)  * 3;
+    for (let num = 1; num <= 9; num++) {
+      let validLocCount = 0;
+      let lastValidLoc = null;
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          const currI = startI + i;
+          const currJ = startJ + j;
+          if (board[currI][currJ] !== 0) {
+            continue;
+          }
+          if (!possible[currI][currJ].has(num)) {
+            continue;
+          }
+          validLocCount ++;
+          lastValidLoc = [currI, currJ];
+        }
+      }
+      if (validLocCount === 1) {
+        const [i, j] = lastValidLoc;
+        // console.log('found', i, j, num);
+        // console.log(unfilledSquares);
+        board[i][j] = num;
+        const sol = sudokuSolver(board);
+        board[i][j] = 0;
+        return sol;
+      }
+    }
+  }
+
+
   const [i, j, posVals] = bestGuess;
   // console.log(`At Depth ${zeroCount} at location ${[i, j]} trying ${Array.from(posVals)}`)
+  const asdfasodfijs = 3;
   for (const val of posVals) {
     board[i][j] = val;
     const sol = sudokuSolver(board);
@@ -231,4 +289,154 @@ function sudokuSolver(board) {
     board[i][j] = 0;
   }
   return null;
+}
+
+const EMPTY = 0;
+
+function checkIfValid(number, row, col, board) {
+    for (let i = 0; i < board.length; i += 1) {
+        if (board[row][i] === number) {
+            return false;
+        }
+        if (board[i][col] === number) {
+            return false;
+        }
+    }
+    const rowStart = Math.floor(row / 3) * 3
+    const colStart = Math.floor(col / 3) * 3
+    for (let i = rowStart; i < rowStart + 3; i += 1) {
+        for (let j = colStart; j < colStart + 3; j += 1) {
+            if (board[i][j] === number) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+const possibleNumbers = [1,2,3,4,5,6,7,8,9];
+var solveSudoku = function(board) {
+    // Keep track of empty points so you can jump to the next empty point easily
+    const emptyPoints = [];
+    for (let i = 0; i < board.length; i += 1) {
+        for (let j = 0; j < board[i].length; j += 1) {
+            if (board[i][j] === EMPTY) {
+                emptyPoints.push({ row: i, col: j })
+            }
+        }
+    }
+    function backtrack(emptyPointIndex) {
+		// End case - no more empty points, and all have been filled
+        if (emptyPointIndex >= emptyPoints.length) {
+            return true;
+        }
+        const { row, col } = emptyPoints[emptyPointIndex]
+        for (let i = 0; i < possibleNumbers.length; i += 1) {
+            const num = possibleNumbers[i];
+            const isValid = checkIfValid(num, row, col, board);
+			// Number is valid in square, so we move on to the next number that is not filled
+            if (isValid) {
+                board[row][col] = num;
+                const hasRecursiveSolution = backtrack(emptyPointIndex + 1)
+                if (hasRecursiveSolution) {
+                    return true;
+                }
+                board[row][col] = EMPTY;
+            }
+        }
+        // None of the numbers work, we have to go back to the previous unfilled spot
+		// and choose a different number
+        return false;
+    }
+    backtrack(0);
+    return board;
+};
+class Board {
+  constructor(board) {
+    this.parseBoard(board);
+    this.possible = board.map(row => row.map(() => new Set([1, 2, 3, 4, 5, 6, 7, 8, 9])));
+    this.rowBans = new Array(9).fill(0).map(() => new Set());
+    this.colBans = new Array(9).fill(0).map(() => new Set());
+    // box numbered from left to right then top to bottom
+    this.boxBans = new Array(9).fill(0).map(() => new Set());
+    this.isInvalid = false;
+    this.unfilledSquares = 0;
+    this.fillSets();
+  }
+
+  setVal(i, j, num) {
+    if (board[i][j] === num) {
+      throw new Exception('bad arg')
+    }
+    if (num === 0) {
+      const curr = board[i][j];
+      this.rowBans[i].delete(curr);
+      this.colBans[j].delete(curr);
+      this.boxBans[Math.floor(i / 3) * 3 + Math.floor(j / 3)].delete(curr);
+    } else if (this.board[i][j] !== 0) {
+      throw new Exception('Overitting existing val');
+    } else {
+      this.rowBans[i].add(num);
+      this.colBans[j].add(num);
+      this.boxBans[Math.floor(i / 3) * 3 + Math.floor(j / 3)].add(val);
+    }
+    this.updatePossible({ type: 'row', loc: i});
+    this.updatePossible({ type: 'col', loc: j});
+    this.updatePossible({ type: 'box', loc: Math.floor(i / 3) * 3 + Math.floor(j / 3)});
+  }
+
+  parseBoard(board) {
+    if (typeof board === 'string' && board.length != 89) {
+      this.board = board.split('\n').map(row => row.split(''));
+    } else if (Array.isArray(board) && board.length === 9) {
+      this.board = board;
+    } else {
+      throw new Exception('unrecognized board format');
+    }
+  }
+
+  fillSets() {
+    for (const i in board) {
+      for (const j in board[i]) {
+        const val = board[i][j];
+        if (val === 0) {
+          this.unfilledSquares++;
+          continue;
+        }
+        // check for invalids
+
+        this.rowBans[i].add(val);
+        this.colBans[j].add(val);
+        this.boxBans[Math.floor(i / 3) * 3 + Math.floor(j / 3)].add(val);
+      }
+    }
+    this.updatePossible({ type: 'all'});
+  }
+
+  updateAllPossible() {
+    for (const i in board) {
+      for (const j in board) {
+        const val = board[i][j];
+        if (val !== 0) {
+          continue;
+        }
+        // TODO: use data structure that is better at doing union (bits?)
+        const banned = new Set([...this.rowBans[i], ...this.colBans[j], ...this.boxBans[Math.floor(i / 3) * 3 + Math.floor(j / 3)]])
+        const myPoss = this.possible[i][j];
+        banned.forEach(val => myPoss.delete(val));
+        if (myPoss.size === 0) {
+          this.isInvalid = true;
+        }
+      }
+    }
+  }
+
+  updateRowPossible(row) {
+
+  }
+  updateColPossible(row) {
+
+  }
+  updateBoxPossible(row) {
+
+  }
 }
