@@ -34,7 +34,7 @@ const puzzle = `735814296
 648792531
 157638429`;
 
-const times = 5000;
+const times = 500;
 
 // runTest(sudokuChecker);
 // runTest(sudokuChecker2);
@@ -89,15 +89,21 @@ const puzzle3 = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
 ]
 
+
+const EMPTY = 0;
+const possibleNumbers = [1,2,3,4,5,6,7,8,9];
+const arrSet = [true,true,true,true,true,true,true,true,true];
 let calls = 0;
-console.log(sudokuChecker(sudokuSolver(puzzle2)));
-console.log(calls);
+// console.log(sudokuChecker(sudokuSolver(puzzle2)));
+// console.log(calls);
 
+// runTest(sudokuSolver);
+runTest(solveSudoku2);
 
-function runTest(fn) {
+function runTest(fn, puzzle = puzzle2) {
   console.time(fn.name);
   for (var i = 0; i < times; i++) {
-    fn(puzzle);
+    fn(JSON.parse(JSON.stringify(puzzle)));
   }
   console.timeEnd(fn.name);
 }
@@ -291,8 +297,6 @@ function sudokuSolver(board) {
   return null;
 }
 
-const EMPTY = 0;
-
 function checkIfValid(number, row, col, board) {
     for (let i = 0; i < board.length; i += 1) {
         if (board[row][i] === number) {
@@ -313,8 +317,66 @@ function checkIfValid(number, row, col, board) {
     }
     return true;
 }
-const possibleNumbers = [1,2,3,4,5,6,7,8,9];
-var solveSudoku = function(board) {
+function solveSudoku2(board) {
+    // Keep track of empty points so you can jump to the next empty point easily
+
+    // TODO: keep track of number of zeroes in board as argument
+    const possible = board.map(row => row.map(() => new Set([1, 2, 3, 4, 5, 6, 7, 8, 9])));
+    const rowBans = new Array(9).fill(0).map(() => new Set());
+    const colBans = new Array(9).fill(0).map(() => new Set());
+    // box numbered from left to right then top to bottom
+    const boxBans = new Array(9).fill(0).map(() => new Set());
+    const emptyPoints = [];
+    for (let i = 0; i < board.length; i += 1) {
+        for (let j = 0; j < board[i].length; j += 1) {
+            if (board[i][j] === EMPTY) {
+                emptyPoints.push({ row: i, col: j })
+            }
+            rowBans[i].add(board[i][j]);
+            colBans[j].add(board[i][j]);
+            boxBans[Math.floor(i / 3) * 3 + Math.floor(j / 3)].add(board[i][j]);
+        }
+    }
+    function backtrack(emptyPointIndex) {
+		// End case - no more empty points, and all have been filled
+        if (emptyPointIndex >= emptyPoints.length) {
+            return true;
+        }
+        const { row, col } = emptyPoints[emptyPointIndex]
+
+        for (let num = 1; num <= 9; num++) {
+          if (rowBans[row].has(num) || colBans[col].has(num) || boxBans[Math.floor(row / 3) * 3 + Math.floor(col / 3)].has(num)) {
+            continue;
+          }
+
+        // for (let i = 0; i < possibleNumbers.length; i += 1) {
+        //   const num = possibleNumbers[i];
+        //   const isValid = checkIfValid(num, row, col, board);
+			// Number is valid in square, so we move on to the next number that is not filled
+            // if (isValid) {
+              rowBans[row].add(num);
+              colBans[col].add(num);
+              boxBans[Math.floor(row / 3) * 3 + Math.floor(col / 3)].add(num);
+              board[row][col] = num;
+                const hasRecursiveSolution = backtrack(emptyPointIndex + 1)
+                if (hasRecursiveSolution) {
+                    return true;
+                }
+                rowBans[row].delete(num);
+                colBans[col].delete(num);
+                boxBans[Math.floor(row / 3) * 3 + Math.floor(col / 3)].delete(num);
+                board[row][col] = EMPTY;
+            // }
+        }
+        // None of the numbers work, we have to go back to the previous unfilled spot
+		// and choose a different number
+        return false;
+    }
+    backtrack(0);
+    return board;
+};
+
+function solveSudoku(board) {
     // Keep track of empty points so you can jump to the next empty point easily
     const emptyPoints = [];
     for (let i = 0; i < board.length; i += 1) {
