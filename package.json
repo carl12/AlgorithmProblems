@@ -4,7 +4,7 @@
   "description": "",
   "main": "GenericRandoms.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "word": "ts-node wordle/wordle.ts"
   },
   "repository": {
     "type": "git",
